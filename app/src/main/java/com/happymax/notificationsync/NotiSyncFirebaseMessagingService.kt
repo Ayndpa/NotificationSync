@@ -11,6 +11,8 @@ import android.content.pm.PackageManager.NameNotFoundException
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.RingtoneManager
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
@@ -37,6 +39,7 @@ class NotiSyncFirebaseMessagingService() : FirebaseMessagingService() {
 
             if(packName != null){
                 val intent = Helper.GetApplicationWithPackageName(packName, this)
+                intent?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 if(intent != null){
                     startActivity(intent)
                 }
@@ -80,18 +83,22 @@ class NotiSyncFirebaseMessagingService() : FirebaseMessagingService() {
         val isInited = sharedPreferences.getBoolean("IsInited", false)
         val isClient = sharedPreferences.getBoolean("IsClient", false)
 
-        if(isInited){
-            if(isClient){
+        if (isInited) {
+            if (isClient) {
                 val editor = sharedPreferences.edit()
                 editor.putString("Token", token)
+                editor.apply()
             }
         }
 
-        Toast.makeText(this, R.string.toast_token_updated, Toast.LENGTH_LONG).show()
+        // Use Handler to make sure Toast is shown on the main thread
+        Handler(Looper.getMainLooper()).post {
+            Toast.makeText(this, R.string.toast_token_updated, Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun sendNotification(appMsg: AppMsg) {
-        val channelId = this.packageName
+        val channelId = "com.happymax.notificationsync"
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder: NotificationCompat.Builder =
             NotificationCompat.Builder(this, channelId)

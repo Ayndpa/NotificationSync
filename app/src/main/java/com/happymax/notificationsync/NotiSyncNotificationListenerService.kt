@@ -168,7 +168,7 @@ class NotiSyncNotificationListenerService : NotificationListenerService() {
 
         val requestBody = json.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
         //You can find myproject-ID in the General tab of your project settings in the Firebase console.
-        val url = "https://fcm.googleapis.com/v1/projects/notificationsync-e95aa/messages:send"
+        val url = "https://fcm.googleapis.com/v1/projects/notificationpush-67db1/messages:send"
         val request = Request.Builder()
             .url(url)
             .post(requestBody)
@@ -194,7 +194,7 @@ class NotiSyncNotificationListenerService : NotificationListenerService() {
     private fun getAccessToken(context:Context): String {
 
         val internalStorageDir = context.getExternalFilesDir(null)
-        val file = File(internalStorageDir, "notificationsync-e95aa-firebase-adminsdk-yuwd4-33db92faa1.json") // 替换为你的文件名
+        val file = File(internalStorageDir, "notificationpush-67db1-firebase-adminsdk-2sikf-401fd6e984.json") // 替换为你的文件名
         val googleCredentials: GoogleCredentials = GoogleCredentials
             .fromStream(FileInputStream(file))
             .createScoped(SCOPES.toList())

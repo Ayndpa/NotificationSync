@@ -1,6 +1,7 @@
 package com.happymax.notificationsync
 
 import android.Manifest
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.ComponentName
 import android.content.ContentValues.TAG
@@ -115,12 +116,14 @@ enum class NotiSyncScreen(@StringRes val title:Int) {
 class MainActivity : ComponentActivity() {
     companion object {
         private const val TAG = "MainActivity"
+        const val CHANNEL_ID = "com.happymax.notificationsync"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         askNotificationPermission()
+        createNotificationChannel()
 
         val sharedPreferences = getSharedPreferences("settings", MODE_PRIVATE)
 
@@ -137,6 +140,21 @@ class MainActivity : ComponentActivity() {
         }
 
     }
+
+    private fun createNotificationChannel() {
+        // 仅在 API 26+ 版本上创建通知渠道
+        val name = getString(R.string.channel_name)
+        val descriptionText = getString(R.string.channel_description)
+        val importance = NotificationManager.IMPORTANCE_HIGH
+        val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+            description = descriptionText
+        }
+        // 注册渠道
+        val notificationManager: NotificationManager =
+            getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
+    }
+
 
     override fun onResume() {
         super.onResume()
@@ -524,7 +542,7 @@ fun ServerScreen(sharedPreferences: SharedPreferences, viewModel: MainScreenView
     var token by rememberSaveable {mutableStateOf(sharedPreferences.getString("Token", ""))}
 
     val assetManager = context.assets
-    val filename = "notificationsync-e95aa-firebase-adminsdk-yuwd4-33db92faa1.json" // 替换为你的 asset 文件名
+    val filename = "notificationpush-67db1-firebase-adminsdk-2sikf-401fd6e984.json" // 替换为你的 asset 文件名
 
     val inputStream: InputStream = assetManager.open(filename)
     val outFile = File(context.getExternalFilesDir(null), filename)
