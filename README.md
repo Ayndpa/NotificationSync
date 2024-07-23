@@ -11,6 +11,9 @@
 
 # 使用方式
 git clone https://github.com/Ayndpa/NotificationSync.git # 下载到本地
+
 使用 Android Studio 等 IDE 打开
+
 修改google-services.json和代码中的notificationpush-67db1-firebase-adminsdk-2sikf-401fd6e984.json为自己的firebase
+
 编译 运行
